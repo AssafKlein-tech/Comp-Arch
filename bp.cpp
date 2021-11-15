@@ -137,7 +137,7 @@ void BTB::update(uint32_t pc, bool isTaken, uint32_t target_pc)
 	uint32_t btb_i = getBTBIndex(pc);
 	uint32_t* curr_histo = findCurrHisto(pc);
 
-	valid_bit[btb_i] = true;
+	valid_bits[btb_i] = true;
 	targets[btb_i] = target_pc;
 
 	if (!isKnownBranch(pc) && !isGlobalHist)
@@ -195,7 +195,7 @@ bool BTB::isKnownBranch(uint32_t pc)
 
 	uint32_t btb_i = getBTBIndex(pc);
 
-	return (valid_bit[btb_i] && tags[btb_i] == tag);
+	return (valid_bits[btb_i] && tags[btb_i] == tag);
 }
 /*****************************************************************************************************************/
 uint32_t* BTB::findCurrHisto(uint32_t pc)
@@ -224,6 +224,7 @@ uint32_t BTB::getBTBIndex(uint32_t pc)
 	// return isGlobalHist ? 0 : btb_i;
 	return btb_i;
 }
+
 /*********************************************************************************************/
 /*********************************************************************************************/
 
@@ -286,7 +287,7 @@ private:
 	unsigned btbSize;
 	fsm_state fsmState;
 	bool isGlobalTable;
-	using_share_enum shared; 
+	using_share_enum shared;
 	std::vector<Table> tables;
 	
 public:
@@ -427,4 +428,3 @@ void BP_update(uint32_t pc, uint32_t targetPc, bool taken, uint32_t pred_dst){
 void BP_GetStats(SIM_stats *curStats){
 	bp->getStats(curStats);
 }
-
