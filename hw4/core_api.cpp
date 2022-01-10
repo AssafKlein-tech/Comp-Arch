@@ -5,6 +5,8 @@
 
 #include <stdio.h>
 #include <vector>
+#include <stdio.h>
+#include <iostream>
 
 using std::vector;
 
@@ -44,13 +46,19 @@ public:
 	 * @return false if need to stall
 	 */
 	bool executeInst();
+	
 	/**
-	 * @brief 
+	 * @brief calculate time of contextswitch (in cycles). the cycles when the cpu in idle are also calculted in this function
 	 * 
-	 * @return true context switch occured
-	 * @return false context switch didn't occured
 	 */
-	bool contextSwitch();
+	void contextSwitch();
+
+	/**
+	 * @brief checks if all thread were finished
+	 * 
+	 * @return true there are running threads
+	 * @return false all threads were finished
+	 */
 	bool notDone();
 	double getCPI();
 	tcontext getContext(int thread_id);
@@ -76,9 +84,12 @@ bool Core::executeInst()
 
 	SIM_MemInstRead(threads[thread].getInst(), &inst, thread);
 	
+	//what do we do with nope
 	int src1 = threads[thread].getRegister(inst.src1_index);
 	int src2 = inst.isSrc2Imm ? inst.src2_index_imm : threads[thread].getRegister(inst.src1_index);
 	int stall = 1;
+
+	std::cout << "inst: " <<  inst.opcode << " : " << src1 << ", " << src2 << std::endl; 
 
 	switch (inst.opcode)
 	{
@@ -90,8 +101,11 @@ bool Core::executeInst()
 		threads[thread].halt();
 		break;
 	case CMD_LOAD: 
-		SIM_MemDataRead(src1+src2, &inst.dst_index);
+		int value;
+		SIM_MemDataRead(src1+src2, &value);
+		threads[thread].setRegister(inst.dst_index, value);
 		stall += load_lat;
+		std::cout << threads[thread].getRegister(inst.dst_index) << std::endl; // load works
 		break;
 	case CMD_STORE: 
 		SIM_MemDataWrite(inst.dst_index+src2, src1);
@@ -109,14 +123,33 @@ bool Core::executeInst()
 	threads[thread].updateStall(cycle+stall);
 	threads[thread].excInst();
 	
-	// cycle++?
+	cycle++;
+	inst_count++;
 
 	return (stall != 1);
 }
-bool Core::contextSwitch()
-{
 
+
+void Core::contextSwitch()
+{
+	std::cout << "this thread: " << thread << ", numOfCyc: " << cycle << ", numOfInst: " << inst_count << std::endl;
+	int next_thread;
+	while(1)
+	{
+		for(unsigned int i = 1; i <= threads.size(); i++)
+		{
+			next_thread = (thread + i) % threads.size();
+			if (!threads[next_thread].isFinished() && threads[next_thread].isExecutable(cycle))
+			{
+				thread = next_thread;
+				cycle += switch_lat;
+				return;
+			}
+		}
+		cycle++;
+	}
 }
+
 bool Core::notDone()
 {
 	for (ContextData ctxt : threads)
@@ -128,13 +161,16 @@ bool Core::notDone()
 
 double Core::getCPI()
 {
+	std::cout << "cycles " << cycle << std::endl;
+	std::cout << "inst count " << inst_count << std::endl;
 	return (double)cycle/inst_count;
 }
+
 tcontext Core::getContext(int thread_id)
 {
 	int* regs = threads[thread_id].getContext();
 	tcontext ctxt;
-	for (int i = 0; i < threads.size(); i++)
+	for (int i = 0; i < REGS_COUNT; i++)
 	{
 		ctxt.reg[i] = regs[i];
 	}
@@ -151,20 +187,27 @@ Core* core;
 void CORE_BlockedMT() 
 {
 	core = new Core();
+	if(core->notDone())
+	{
+		while(core->executeInst()) {}
+	}
 	while(core->notDone())
 	{	
-		while(core->executeInst())
 		core->contextSwitch();
+		while(core->executeInst()){}
 	}
+	std::cout << core->getCPI() << std::endl;
 }
 
 void CORE_FinegrainedMT() 
 {
 	core = new Core();
+	if(core->notDone())
+		core->executeInst();
 	while(core->notDone())
 	{
-		core->executeInst();
 		core->contextSwitch();
+		core->executeInst();
 	}
 }
 
