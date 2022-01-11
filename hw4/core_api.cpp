@@ -86,8 +86,9 @@ bool Core::executeInst()
 	SIM_MemInstRead(threads[thread].getInst(), &inst, thread);
 	
 	//what do we do with nope
+	int dst_val = threads[thread].getRegister(inst.dst_index);
 	int src1 = threads[thread].getRegister(inst.src1_index);
-	int src2 = inst.isSrc2Imm ? inst.src2_index_imm : threads[thread].getRegister(inst.src1_index);
+	int src2 = inst.isSrc2Imm ? inst.src2_index_imm : threads[thread].getRegister(inst.src2_index_imm);
 	int stall = 1;
 
 	//std::cout << "\ninst: " <<  inst.opcode << " : " << src1 << ", " << src2 << std::endl; 
@@ -112,7 +113,7 @@ bool Core::executeInst()
 		//std::cout << load_lat << std::endl;
 		break;
 	case CMD_STORE: 
-		SIM_MemDataWrite(inst.dst_index+src2, src1);
+		SIM_MemDataWrite(dst_val+src2, src1);
 		stall += store_lat;
 		break;
 	case CMD_SUBI: 
@@ -212,7 +213,7 @@ void CORE_BlockedMT()
 		core->contextSwitch(true);
 		while(core->executeInst()){}
 	}
-	std::cout << core->getCPI() << std::endl;
+	// std::cout << core->getCPI() << std::endl;
 }
 
 void CORE_FinegrainedMT() 

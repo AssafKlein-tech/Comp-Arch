@@ -8,6 +8,8 @@ CFLAGS = -std=c99 -Wall -O0
 CXX = g++
 CXXFLAGS = -std=c++11 -Wall -O0
 
+DEBUG = 1
+
 ifeq ($(DEBUG),1)
   CFLAGS += -g
   CXXFLAGS += -g
