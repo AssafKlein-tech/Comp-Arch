@@ -28,25 +28,25 @@ int main(int argc, char const *argv[]){
 
     // Start blocked MT simulation
 	CORE_BlockedMT();
-	printf("\n---- Blocked MT Simulation ----\n");
+	printf("\n----Blocked Simulation -------\n");
 	for(int k=0; k<threads; k++){
 		CORE_BlockedMT_CTX(blocked, k);
 	    printf("\nRegister file thread id %d:\n", k);
 	    for (int i=0; i<REGS_COUNT; ++i)
 	        printf("\tR%d = 0x%X", i, blocked[k].reg[i]);
 	}
-    printf("\nBlocked MT CPI for this program %lf\n", CORE_BlockedMT_CPI());
+    printf("\nBlocked Multithreading CPI for this program %lf\n", CORE_BlockedMT_CPI());
 
     // Start finegrained MT simulation
 	CORE_FinegrainedMT();
-	printf("\n-----Finegrained MT Simulation -----\n");
+	printf("\n-----Finegrained Simulation -----\n");
 	for(int k=0; k < SIM_GetThreadsNum(); k++){
 		CORE_FinegrainedMT_CTX(finegrained,k);
 	    printf("\nRegister file thread id %d:\n",k);
 	    for (int i = 0; i < REGS_COUNT; ++i)
 	        printf("\tR%d = 0x%X", i, finegrained[k].reg[i]);
 	}
-	printf("\nFinegrained Multithreading CPI for this program %lf\n\n", CORE_FinegrainedMT_CPI());
+	printf("\nFinegrained Multithreading CPI for this program %lf\n", CORE_FinegrainedMT_CPI());
 	SIM_MemFree();
 
     // Free register files

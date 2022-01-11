@@ -10,7 +10,7 @@
 			"type": "cppdbg",
 			"request": "launch",
 			"program": "${fileDirname}/sim_main",
-			"args": ["tests-segel/example2.img"],
+			"args": ["tests/test3.in"],
 			"stopAtEntry": true,
 			"cwd": "${fileDirname}",
 			"environment": [],
