@@ -50,8 +50,9 @@ public:
 	/**
 	 * @brief calculate time of contextswitch (in cycles). the cycles when the cpu in idle are also calculted in this function
 	 * 
+	 * @param latency if there is a latency to the context switch
 	 */
-	void contextSwitch();
+	void contextSwitch(bool latency = false);
 
 	/**
 	 * @brief checks if all thread were finished
@@ -61,7 +62,7 @@ public:
 	 */
 	bool notDone();
 	double getCPI();
-	tcontext getContext(int thread_id);
+	void getContext(tcontext* c, int thread_id);
 
 private:
 	int cycle;
@@ -89,7 +90,7 @@ bool Core::executeInst()
 	int src2 = inst.isSrc2Imm ? inst.src2_index_imm : threads[thread].getRegister(inst.src1_index);
 	int stall = 1;
 
-	std::cout << "inst: " <<  inst.opcode << " : " << src1 << ", " << src2 << std::endl; 
+	//std::cout << "\ninst: " <<  inst.opcode << " : " << src1 << ", " << src2 << std::endl; 
 
 	switch (inst.opcode)
 	{
@@ -99,13 +100,16 @@ bool Core::executeInst()
 		break;
 	case CMD_HALT: 
 		threads[thread].halt();
+		cycle++;
+		inst_count++;
+		return false;
 		break;
 	case CMD_LOAD: 
 		int value;
 		SIM_MemDataRead(src1+src2, &value);
 		threads[thread].setRegister(inst.dst_index, value);
 		stall += load_lat;
-		std::cout << threads[thread].getRegister(inst.dst_index) << std::endl; // load works
+		//std::cout << load_lat << std::endl;
 		break;
 	case CMD_STORE: 
 		SIM_MemDataWrite(inst.dst_index+src2, src1);
@@ -122,27 +126,41 @@ bool Core::executeInst()
 
 	threads[thread].updateStall(cycle+stall);
 	threads[thread].excInst();
+	/*
+	tcontext *blocked = (tcontext*)malloc(SIM_GetThreadsNum() * sizeof(tcontext));
+	CORE_BlockedMT_CTX(blocked, thread);
 	
+	std::cout << "\nRegister file thread id " << thread << ": \n" << std::endl;
+	for (int i=0; i<REGS_COUNT; ++i)
+	{
+	    printf("\tR%d = 0x%X", i, blocked[thread].reg[i]);
+	}
+	
+	std::cout << "\n" << stall << std::endl;
+	free(blocked);
+	*/
 	cycle++;
 	inst_count++;
-
-	return (stall != 1);
+	return (stall == 1);
 }
 
 
-void Core::contextSwitch()
+void Core::contextSwitch(bool latency)
 {
-	std::cout << "this thread: " << thread << ", numOfCyc: " << cycle << ", numOfInst: " << inst_count << std::endl;
+	//std::cout << "\nthis thread: " << thread << ", numOfCyc: " << cycle << ", numOfInst: " << inst_count << "\n\n\ncontext switch" << std::endl;
 	int next_thread;
 	while(1)
 	{
-		for(unsigned int i = 1; i <= threads.size(); i++)
+		if (!threads[thread].isFinished() && threads[thread].isExecutable(cycle))
+			return;
+		for(unsigned int i = 1; i < threads.size(); i++)
 		{
 			next_thread = (thread + i) % threads.size();
 			if (!threads[next_thread].isFinished() && threads[next_thread].isExecutable(cycle))
 			{
 				thread = next_thread;
-				cycle += switch_lat;
+				if(latency)
+					cycle += switch_lat;
 				return;
 			}
 		}
@@ -161,20 +179,18 @@ bool Core::notDone()
 
 double Core::getCPI()
 {
-	std::cout << "cycles " << cycle << std::endl;
-	std::cout << "inst count " << inst_count << std::endl;
+	//std::cout << "\ncycles " << cycle << std::endl;
 	return (double)cycle/inst_count;
 }
 
-tcontext Core::getContext(int thread_id)
+void Core::getContext(tcontext* c, int thread_id)
 {
 	int* regs = threads[thread_id].getContext();
-	tcontext ctxt;
 	for (int i = 0; i < REGS_COUNT; i++)
 	{
-		ctxt.reg[i] = regs[i];
+		c[thread_id].reg[i] = regs[i];
 	}
-	return ctxt;
+	return;
 }
 
 
@@ -193,7 +209,7 @@ void CORE_BlockedMT()
 	}
 	while(core->notDone())
 	{	
-		core->contextSwitch();
+		core->contextSwitch(true);
 		while(core->executeInst()){}
 	}
 	std::cout << core->getCPI() << std::endl;
@@ -225,10 +241,10 @@ double CORE_FinegrainedMT_CPI()
 
 void CORE_BlockedMT_CTX(tcontext* context, int threadid)
 {
-	*context = core->getContext(threadid);
+	core->getContext(context,threadid);
 }
 
 void CORE_FinegrainedMT_CTX(tcontext* context, int threadid)
 {
-	CORE_BlockedMT_CTX(context,threadid);
+	core->getContext(context,threadid);
 }
