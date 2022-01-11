@@ -1,0 +1,24 @@
+==12976== Memcheck, a memory error detector
+==12976== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==12976== Using Valgrind-3.13.0 and LibVEX; rerun with -h for copyright info
+==12976== Command: ./sim_main tests/example14.img 80 -f
+==12976== 
+-nan
+
+---- Blocked MT Simulation ----
+
+Blocked MT CPI for this program -nan
+
+-----Finegrained MT Simulation -----
+
+Finegrained Multithreading CPI for this program -nan
+
+==12976== 
+==12976== HEAP SUMMARY:
+==12976==     in use at exit: 0 bytes in 0 blocks
+==12976==   total heap usage: 8 allocs, 8 frees, 74,376 bytes allocated
+==12976== 
+==12976== All heap blocks were freed -- no leaks are possible
+==12976== 
+==12976== For counts of detected and suppressed errors, rerun with: -v
+==12976== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

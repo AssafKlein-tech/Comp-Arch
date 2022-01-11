@@ -1,16 +1,14 @@
-# Memory image example - comments are allowed in lines that start with # as first character!
+# This test check if load hazard from reg 0 will be forward and cause wrong calc
+
 # Program start at address 0, after reset.
 I@0x00000000
-ADD $3, $0, 4
-ADD $4, $0, 4
-SUB $7, $0, 1
-SUB $8, $0, 1
-HALT $0
-
+LOAD $1, $0, 0x32A0
+LOAD $1, $0, 0x32A4
+ADD $2, $1, $0
 
 # Program ends with infinite loop (avoid fall-through to undefined data following the end of the program)
 
 # Data for this program. Any other location that is not explicitly set is implicitly set to zero.
 D@0x000032A0
-0x12345678
-0xFFFFFFFF
+0xDEAC
+0x1

@@ -1,0 +1,60 @@
+# The instructions are:
+# 	NOP
+#	ADD $dst, $src1, $src2 		(dst <- src1 + src2)
+#	SUB $dst, $src1, $src2 		(dst <- src1 - src2)
+#	LOAD $dst, $src1, $src2 	(dst <- Mem[src1 + src2]  src2 may be an immediate)
+#	STORE $dst, $src1, $src2 	(Mem[dst + src2] <- src1  src2 may be an immediate)
+#	BR $dst 					(Unconditional relative branch to PC+dst register value)
+#	BREQ $dst, $src1, $src2		(Branch to PC+dst if src1 == src2)
+#	BRNEQ $dst, $src1, $src2	(Branch to PC+dst if src1 != src2)
+
+# Used to test HDU problems:
+# HDU - EXE to ID
+# HDU - Mem to ID
+# Load Hazard - R-Type after Load
+# Inifinite loop
+
+# First checks the data hazards.
+# Registers should be:
+# $16 = 1, $17 = 1, $18 = 2, $19 = 3
+# Next checks load hazard.
+# Goes into infinite loop $20 = (40, 36, 32, 28 , 24, ....)
+
+I@0x00000000
+LOAD $11, $0, 0x1000
+ADD $12, $0, $11
+SUB $16, $12, $0
+ADD $12, $0, $16
+ADD $13, $11, $12
+SUB $17, $13, $12
+ADD $12, $0, $17
+ADD $13, $11, $12
+ADD $14, $11, $13
+SUB $18, $14, $12
+ADD $12, $0, $18
+ADD $13, $11, $12
+ADD $14, $11, $13
+ADD $15, $11, $14
+SUB $19, $15, $12
+LOAD $16, $0, 0x1004
+ADD $16, $16, $16
+STORE $16, $16, 0x1000
+LOAD $17, $16, 0x1000
+ADD $18, $17, $17
+LOAD $22, $18, 0x1000
+ADD $18, $18, $17
+LOAD $20, $18, 0x1000
+SUB $20, $20, $17
+STORE $18, $20, 0x1000
+SUB $20, $20, $20
+BR $22
+ADD $1, $0, $2
+ADD $1, $0, $0
+ADD $1, $0, $0
+ADD $1, $0, $0
+
+D@0x00001000
+1
+2
+-20
+40

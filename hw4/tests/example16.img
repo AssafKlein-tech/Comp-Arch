@@ -1,0 +1,18 @@
+# This test check for data hazard to STORE dst reg
+
+# Program start at address 0, after reset.
+#	LOAD $dst, $src1, $src2 	(dst <- Mem[src1 + src2]  src2 may be an immediate)
+#	STORE $dst, $src1, $src2 	(Mem[dst + src2] <- src1  src2 may be an immediate)
+
+I@0x00000000
+LOAD $1, $0, 0x32A0
+ADD $2, $1, $1
+STORE $2, $2, 0x32A0
+LOAD $3, $2, 0x32A0
+
+# Program ends with infinite loop (avoid fall-through to undefined data following the end of the program)
+
+# Data for this program. Any other location that is not explicitly set is implicitly set to zero.
+D@0x000032A0
+0x2
+0x0

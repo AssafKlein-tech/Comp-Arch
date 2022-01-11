@@ -1,0 +1,36 @@
+# The instructions are:
+# 	NOP
+#	ADD $dst, $src1, $src2 		(dst <- src1 + src2)
+#	SUB $dst, $src1, $src2 		(dst <- src1 - src2)
+#	LOAD $dst, $src1, $src2 	(dst <- Mem[src1 + src2]  src2 may be an immediate)
+#	STORE $dst, $src1, $src2 	(Mem[dst + src2] <- src1  src2 may be an immediate)
+#	BR $dst 					(Unconditional relative branch to PC+dst register value)
+#	BREQ $dst, $src1, $src2		(Branch to PC+dst if src1 == src2)
+#	BRNEQ $dst, $src1, $src2	(Branch to PC+dst if src1 != src2)
+
+# Infinite loop, multiply by 2 each cycle. When the result is 16,
+# Clears the buffer to 1.
+
+
+I@0x00000000
+LOAD $22, $0, 0x100C
+LOAD $21, $0, 0x1008
+LOAD $20, $0, 0x1004
+LOAD $10, $0, 0x1000
+LOAD $1, $0, 0x1000
+ADD $2, $1, $1
+BRNEQ $22, $2, $21
+ADD $2, $0, $10
+STORE $0, $2, 0x1000
+BR $20
+SUB $3, $3, $3
+SUB $3, $3, $3
+SUB $3, $3, $3
+SUB $3, $3, $3
+SUB $3, $3, $3
+
+D@0x00001000
+1
+-24
+16
+4

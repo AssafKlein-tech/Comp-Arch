@@ -1,0 +1,41 @@
+# Memory image example - comments are allowed in lines that start with # as first character!
+# Program start at address 0, after reset.
+I@0x00000000
+LOAD $1, $0, 0x32A0
+ADD $2, $1, $0
+ADD $3, $2, $1
+ADD $4, $3, $2
+ADD $5, $4, $3
+ADD $6, $5, $4
+ADD $7, $6, $5
+ADD $8, $7, $6
+ADD $9, $8, $7
+ADD $10, $9, $8
+ADD $11, $10, $9
+ADD $12, $11, $10
+ADD $13, $12, $11
+ADD $14, $13, $12
+ADD $15, $14, $13
+ADD $16, $15, $14
+ADD $17, $16, $15
+ADD $18, $17, $16
+ADD $19, $18, $17
+ADD $20, $19, $18
+ADD $21, $20, $19
+ADD $22, $21, $20
+ADD $23, $22, $21
+ADD $24, $23, $22
+ADD $25, $24, $23
+ADD $26, $25, $24
+ADD $27, $26, $25
+ADD $28, $27, $26
+ADD $29, $28, $27
+ADD $30, $29, $28
+HALT $0
+
+
+# Program ends with infinite loop (avoid fall-through to undefined data following the end of the program)
+
+# Data for this program. Any other location that is not explicitly set is implicitly set to zero.
+D@0x000032A0
+0x1
