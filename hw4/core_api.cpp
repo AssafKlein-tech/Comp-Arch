@@ -10,7 +10,7 @@
 
 using std::vector;
 
-
+const char* opcodes[] = {"NOP", "ADD", "SUB", "ADDI", "SUBI", "LOAD", "STORE", "HALT"};
 class ContextData
 {
 private:
@@ -91,15 +91,17 @@ bool Core::executeInst()
 	int src2 = inst.isSrc2Imm ? inst.src2_index_imm : threads[thread].getRegister(inst.src2_index_imm);
 	int stall = 1;
 
-	//std::cout << "\ninst: " <<  inst.opcode << " : " << src1 << ", " << src2 << std::endl; 
+	std::cout<<cycle<<":\t"<<"["<<thread<<"]\t";
 
 	switch (inst.opcode)
 	{
 	case CMD_ADDI: 
 	case CMD_ADD: 
 		threads[thread].setRegister(inst.dst_index, src1+src2);
+		std::cout<<"REG"<<inst.dst_index<<"= "<<src1<<"+"<<src2<<"="<<threads[thread].getRegister(inst.dst_index)<<std::endl;
 		break;
 	case CMD_HALT: 
+		std::cout<<"HALT"<<std::endl;
 		threads[thread].halt();
 		cycle++;
 		inst_count++;
@@ -110,15 +112,18 @@ bool Core::executeInst()
 		SIM_MemDataRead(src1+src2, &value);
 		threads[thread].setRegister(inst.dst_index, value);
 		stall += load_lat;
+		std::cout<<"REG"<<inst.dst_index<<"= MEM["<<src1<<"+"<<src2<<"]="<<value<<std::endl;
 		//std::cout << load_lat << std::endl;
 		break;
 	case CMD_STORE: 
 		SIM_MemDataWrite(dst_val+src2, src1);
 		stall += store_lat;
+		std::cout<<"MEM["<<dst_val<<"+"<<src2<<"]="<<src2<<std::endl;
 		break;
 	case CMD_SUBI: 
 	case CMD_SUB: 
 		threads[thread].setRegister(inst.dst_index, src1-src2);
+		std::cout<<"REG"<<inst.dst_index<<"= "<<src1<<"-"<<src2<<"="<<threads[thread].getRegister(inst.dst_index)<<std::endl;
 		break;
 	
 	default:

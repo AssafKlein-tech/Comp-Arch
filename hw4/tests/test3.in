@@ -1,18 +1,19 @@
-#BAD TEST!!!!!!!!!!!!!
 L8
 S6
 O13
 N7
 
+#48 inst
+
 T0
 I@0x00000000
-ADDI $6, $4, 0x3	#reg6= 0x3
-SUB $7, $6, $0		#reg7= 0x3
-SUBI $5, $0, 0x3	#reg5= -0x3
-ADDI $0, $4, 0x2	#reg0= 0x2
-ADDI $5, $1, 0x2	#reg5= 0x2
-SUBI $0, $1, 0x2	#reg0= -0x2
-LOAD $5, $0, 0x0	#reg5= MEMORY[-2] ???
+ADDI $6, $4, 0x3
+SUB $7, $6, $0
+SUBI $5, $0, 0x3
+ADDI $0, $4, 0x2
+ADDI $5, $1, 0x2
+SUBI $0, $1, 0x2
+LOAD $5, $0, 0x0
 HALT $0
 
 T1
