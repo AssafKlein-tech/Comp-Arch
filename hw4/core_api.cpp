@@ -157,8 +157,6 @@ void Core::contextSwitch(bool latency)
 	int next_thread;
 	while(1)
 	{
-		if (!threads[thread].isFinished() && threads[thread].isExecutable(cycle))
-			return;
 		for(unsigned int i = 1; i < threads.size(); i++)
 		{
 			next_thread = (thread + i) % threads.size();
@@ -171,6 +169,8 @@ void Core::contextSwitch(bool latency)
 			}
 		}
 		cycle++;
+		if (!threads[thread].isFinished() && threads[thread].isExecutable(cycle))
+			return;
 	}
 }
 
