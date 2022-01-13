@@ -8,6 +8,8 @@ CFLAGS = -std=c99 -Wall -O0
 CXX = g++
 CXXFLAGS = -std=c++11 -Wall -O0
 
+# for our use
+SUBMITTERS := 315697169_313289555
 DEBUG = 1
 
 ifeq ($(DEBUG),1)
@@ -44,6 +46,9 @@ endif
 
 $(OBJ_GIVEN): %.o: %.c
 	gcc -c $(CFLAGS) -o $@ $<
+
+zip: $(SRC_CORE)
+	tar -czvf hw4_$(SUBMITTERS).tar.gz $^
 
 .PHONY: clean
 clean:

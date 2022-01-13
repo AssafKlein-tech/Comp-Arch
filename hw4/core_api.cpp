@@ -9,7 +9,7 @@
 
 using std::vector;
 
-const char* opcodes[] = {"NOP", "ADD", "SUB", "ADDI", "SUBI", "LOAD", "STORE", "HALT"};
+const char* opcodes[] = {"NOP", "ADD", "SUB", "ADDI", "SUBI", "LOAD", "STORE", "HALT"}; // debug
 class ContextData
 {
 private:
@@ -94,19 +94,19 @@ bool Core::executeInst()
 
 	switch (inst.opcode)
 	{
-	case CMD_ADDI: 
-	case CMD_ADD: 
+	case CMD_ADDI:
+	case CMD_ADD:
 		threads[thread].setRegister(inst.dst_index, src1+src2);
 		//std::cout<<"REG"<<inst.dst_index<<"= "<<src1<<"+"<<src2<<"="<<threads[thread].getRegister(inst.dst_index)<<std::endl;
 		break;
-	case CMD_HALT: 
+	case CMD_HALT:
 		//std::cout<<"HALT"<<std::endl;
 		threads[thread].halt();
 		cycle++;
 		inst_count++;
 		return false;
 		break;
-	case CMD_LOAD: 
+	case CMD_LOAD:
 		int value;
 		SIM_MemDataRead(src1+src2, &value);
 		threads[thread].setRegister(inst.dst_index, value);
@@ -115,15 +115,15 @@ bool Core::executeInst()
 		//std::cout<<" wait until "<<cycle+stall<<std::endl;
 		//std::cout << load_lat << std::endl;
 		break;
-	case CMD_STORE: 
+	case CMD_STORE:
 		SIM_MemDataWrite(dst_val+src2, src1);
 		stall += store_lat;
 		//std::cout<<"MEM["<<dst_val<<"+"<<src2<<"]="<<src1<<std::endl;
 		//std::cout<<" wait until "<<cycle+stall<<std::endl;
 
 		break;
-	case CMD_SUBI: 
-	case CMD_SUB: 
+	case CMD_SUBI:
+	case CMD_SUB:
 		threads[thread].setRegister(inst.dst_index, src1-src2);
 		//std::cout<<"REG"<<inst.dst_index<<"= "<<src1<<"-"<<src2<<"="<<threads[thread].getRegister(inst.dst_index)<<std::endl;
 		break;
@@ -213,33 +213,6 @@ Core* core;
 
 void CORE_BlockedMT() 
 {
-	/*
-	int value;
-	SIM_MemDataRead(-3, &value);
-	std::cout << value << std::endl;
-	SIM_MemDataRead(-20, &value);
-	std::cout << value << std::endl;
-	SIM_MemDataRead(2, &value);
-	std::cout << value << std::endl;
-	SIM_MemDataRead(3, &value);
-	std::cout << value << std::endl;
-	SIM_MemDataRead(4, &value);
-	std::cout << value << std::endl;
-	SIM_MemDataRead(5, &value);
-	std::cout << value << std::endl;
-	SIM_MemDataRead(6, &value);
-	std::cout << value << std::endl;
-	SIM_MemDataRead(7, &value);
-	std::cout << value << std::endl;
-	SIM_MemDataRead(8, &value);
-	std::cout << value << std::endl;
-	SIM_MemDataRead(9, &value);
-	std::cout << value << std::endl;
-	SIM_MemDataRead(10, &value);
-	std::cout << value << std::endl;
-	SIM_MemDataRead(11, &value);
-	std::cout << value << std::endl;
-	*/
 	core = new Core();
 	if(core->notDone())
 	{
@@ -254,21 +227,6 @@ void CORE_BlockedMT()
 
 void CORE_FinegrainedMT() 
 {
-	/*
-	int value;
-	SIM_MemDataRead(6, &value);
-	std::cout << value << std::endl;
-	SIM_MemDataRead(7, &value);
-	std::cout << value << std::endl;
-	SIM_MemDataRead(8, &value);
-	std::cout << value << std::endl;
-	SIM_MemDataRead(9, &value);
-	std::cout << value << std::endl;
-	SIM_MemDataRead(10, &value);
-	std::cout << value << std::endl;
-	SIM_MemDataRead(11, &value);
-	std::cout << value << std::endl;
-	*/
 	core = new Core();
 	if(core->notDone())
 		core->executeInst();

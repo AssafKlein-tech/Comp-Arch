@@ -3,6 +3,11 @@
 count_failes=0
 count_pass=0
 
+if [ ! -f "sim_main" ]; then
+    echo -e ">\tNo sim_main exist, running 'make'"
+    make
+fi
+
 echo Running tests...
 echo The test succeed if there are no diffs printed.
 echo
@@ -29,3 +34,12 @@ echo Ran all tests.
 
 echo Pass=$count_pass
 echo Fail=$count_failes
+
+if [ "$1" == "clean" ]; then 
+    echo -e ">\tmake clean"
+    make clean
+fi
+if [ "$1" != "" ]; then
+    yes | rm tests/*YoursOut*
+    echo -e ">\trm tests/*YoursOut*"
+fi
