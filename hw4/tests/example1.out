@@ -1,5 +1,5 @@
 
-----Blocked Simulation -------
+---- Blocked MT Simulation ----
 
 Register file thread id 0:
 	R0 = 0x0	R1 = 0x0	R2 = 0x0	R3 = 0x0	R4 = 0x0	R5 = 0x0	R6 = 0x0	R7 = 0x0
@@ -7,9 +7,9 @@ Register file thread id 1:
 	R0 = 0x0	R1 = 0x0	R2 = 0x10	R3 = 0x0	R4 = 0x0	R5 = 0x8	R6 = 0x0	R7 = 0x0
 Register file thread id 2:
 	R0 = 0x0	R1 = 0x0	R2 = 0x8	R3 = 0x0	R4 = 0x0	R5 = 0x4	R6 = 0x0	R7 = 0x9
-Blocked Multithreading CPI for this program 1.666667
+Blocked MT CPI for this program 1.444444
 
------Finegrained Simulation -----
+-----Finegrained MT Simulation -----
 
 Register file thread id 0:
 	R0 = 0x0	R1 = 0x0	R2 = 0x0	R3 = 0x0	R4 = 0x0	R5 = 0x0	R6 = 0x0	R7 = 0x0
@@ -17,4 +17,5 @@ Register file thread id 1:
 	R0 = 0x0	R1 = 0x0	R2 = 0x10	R3 = 0x0	R4 = 0x0	R5 = 0x8	R6 = 0x0	R7 = 0x0
 Register file thread id 2:
 	R0 = 0x0	R1 = 0x0	R2 = 0x8	R3 = 0x0	R4 = 0x0	R5 = 0x4	R6 = 0x0	R7 = 0x9
-Finegrained Multithreading CPI for this program 1.222222
+Finegrained Multithreading CPI for this program 1.000000
+

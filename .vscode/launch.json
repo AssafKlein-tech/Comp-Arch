@@ -10,7 +10,7 @@
 			"type": "cppdbg",
 			"request": "launch",
 			"program": "${fileDirname}/sim_main",
-			"args": ["tests/test3.in"],
+			"args": ["tests/test390.in"],
 			"stopAtEntry": true,
 			"cwd": "${fileDirname}",
 			"environment": [],
