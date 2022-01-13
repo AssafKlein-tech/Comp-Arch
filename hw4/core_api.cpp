@@ -3,7 +3,6 @@
 #include "core_api.h"
 #include "sim_api.h"
 
-#include <stdio.h>
 #include <vector>
 #include <stdio.h>
 #include <iostream>
@@ -119,7 +118,7 @@ bool Core::executeInst()
 	case CMD_STORE: 
 		SIM_MemDataWrite(dst_val+src2, src1);
 		stall += store_lat;
-		//std::cout<<"MEM["<<dst_val<<"+"<<src2<<"]="<<src2<<std::endl;
+		//std::cout<<"MEM["<<dst_val<<"+"<<src2<<"]="<<src1<<std::endl;
 		//std::cout<<" wait until "<<cycle+stall<<std::endl;
 
 		break;
@@ -215,6 +214,33 @@ Core* core;
 
 void CORE_BlockedMT() 
 {
+	/*
+	int value;
+	SIM_MemDataRead(-3, &value);
+	std::cout << value << std::endl;
+	SIM_MemDataRead(-20, &value);
+	std::cout << value << std::endl;
+	SIM_MemDataRead(2, &value);
+	std::cout << value << std::endl;
+	SIM_MemDataRead(3, &value);
+	std::cout << value << std::endl;
+	SIM_MemDataRead(4, &value);
+	std::cout << value << std::endl;
+	SIM_MemDataRead(5, &value);
+	std::cout << value << std::endl;
+	SIM_MemDataRead(6, &value);
+	std::cout << value << std::endl;
+	SIM_MemDataRead(7, &value);
+	std::cout << value << std::endl;
+	SIM_MemDataRead(8, &value);
+	std::cout << value << std::endl;
+	SIM_MemDataRead(9, &value);
+	std::cout << value << std::endl;
+	SIM_MemDataRead(10, &value);
+	std::cout << value << std::endl;
+	SIM_MemDataRead(11, &value);
+	std::cout << value << std::endl;
+	*/
 	core = new Core();
 	if(core->notDone())
 	{
@@ -229,6 +255,21 @@ void CORE_BlockedMT()
 
 void CORE_FinegrainedMT() 
 {
+	/*
+	int value;
+	SIM_MemDataRead(6, &value);
+	std::cout << value << std::endl;
+	SIM_MemDataRead(7, &value);
+	std::cout << value << std::endl;
+	SIM_MemDataRead(8, &value);
+	std::cout << value << std::endl;
+	SIM_MemDataRead(9, &value);
+	std::cout << value << std::endl;
+	SIM_MemDataRead(10, &value);
+	std::cout << value << std::endl;
+	SIM_MemDataRead(11, &value);
+	std::cout << value << std::endl;
+	*/
 	core = new Core();
 	if(core->notDone())
 		core->executeInst();

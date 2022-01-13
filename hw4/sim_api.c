@@ -9,6 +9,10 @@
 #include <string.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <stdio.h>
+
+
+
 
 static const char *cmdStr[] = {"NOP", "ADD", "SUB","ADDI", "SUBI","LOAD", "STORE", "HALT"};
 uint32_t prog_start; // the addr of the code block
