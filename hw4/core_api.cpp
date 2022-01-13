@@ -142,7 +142,6 @@ bool Core::executeInst()
 
 void Core::contextSwitch(bool latency)
 {
-	//std::cout << "\nthis thread: " << thread << ", numOfCyc: " << cycle << ", numOfInst: " << inst_count << "\n\n\ncontext switch" << std::endl;
 	int next_thread;
 	if (latency)
 	{

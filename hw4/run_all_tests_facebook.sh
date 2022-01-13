@@ -18,6 +18,7 @@ for filename in tests/*.out; do
     if [ "$diff_result" != "" ]; then
         echo The test ${test_num} didnt pass
         ((count_failes=count_failes+1))
+        
     else
         ((count_pass=count_pass+1))
     fi
